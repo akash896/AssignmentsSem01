@@ -1,5 +1,6 @@
 from secp256k1 import curve,scalar_mult
 import random
+import hashlib
 
 print("Basepoint:\t", curve.g)
 
