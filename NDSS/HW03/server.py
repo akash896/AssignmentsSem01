@@ -1,3 +1,5 @@
+import hmac
+
 from secp256k1 import curve,scalar_mult
 import random
 import socket
@@ -12,6 +14,27 @@ def generate_asymmetric_keys():
     global server_Public_Key, server_Secret_Key
     server_Secret_Key = random.randrange(1, curve.n)
     server_Public_Key = scalar_mult(server_Secret_Key, curve.g)
+
+def send_message_to_client(c, client_shared_secret):
+   s_to_c_message = input("Enter essage for Client")
+   h = hmac.new(str(client_shared_secret[0]).encode(), s_to_c_message.encode(), hashlib.sha256)
+   hash = str(h.hexdigest())
+   print("message = ", s_to_c_message, " \n hash = ", hash)
+   message_hash = s_to_c_message + hash
+   c.send(message_hash.encode())
+
+def check_server_message(c, client_shared_secret):
+   c_to_s_message = c.recv(1024).decode()
+   hash = c_to_s_message[-64:]
+   message = c_to_s_message[0:len(c_to_s_message) - 64]
+   calculated_h = hmac.new(str(client_shared_secret[0]).encode(), message.encode(), hashlib.sha256)
+   calculated_hash = calculated_h.hexdigest()
+   if calculated_hash == hash:
+      print("message C->S = ", message, "\n hash = ", hash)
+      print("C to S message SUCCESSFULLY transferred ####################################")
+   else:
+      print("Client to server MESSAGE is NOT CORRECT")
+
 
 def start_server():
    s = socket.socket()         # Create a socket object
@@ -30,9 +53,10 @@ def start_server():
    print("Client Public key = ", client_public_key)
     # creating the shared secret
    client_shared_secret = scalar_mult(server_Secret_Key, client_public_key)
-   print("### Server shared secret = ", client_shared_secret)
+   print("### Client shared secret = ", client_shared_secret)
 
-
+   send_message_to_client(c, client_shared_secret)
+   check_server_message(c, client_shared_secret)
 
 
    # c.send('Thank you for connecting, Now you can send REQUESTS'.encode())  # sending message to client
