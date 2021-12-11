@@ -11,7 +11,7 @@ bobSecretKey  = random.randrange(1, curve.n)
 bobPublicKey = scalar_mult(bobSecretKey, curve.g)
 
 print("\nAlice\'s secret key:\t", aliceSecretKey)
-print("Alice\'s public key:\t", int(str(alicePublicKey)))
+print("Alice\'s public key:\t", alicePublicKey)
 print("\nBob\'s secret key:\t", bobSecretKey)
 print("Bob\'s public key:\t", bobPublicKey)
 

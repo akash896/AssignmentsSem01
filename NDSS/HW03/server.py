@@ -26,11 +26,11 @@ def start_server():
    c.send(str(server_Public_Key).encode())
    # receiving public key from client
    global client_public_key
-   client_public_key = c.recv(1024).decode()
+   client_public_key = tuple(int(k) for k in c.recv(1024).decode()[1:-1].split(", "))
    print("Client Public key = ", client_public_key)
     # creating the shared secret
    client_shared_secret = scalar_mult(server_Secret_Key, client_public_key)
-   print("Server shared secret = ", client_shared_secret)
+   print("### Server shared secret = ", client_shared_secret)
 
 
 

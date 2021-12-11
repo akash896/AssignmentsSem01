@@ -20,16 +20,20 @@ def start_client():
 
     # receiving public key from server
     global server_public_key
-    server_public_key = int.from_bytes(s.recv(1024), "big")
+    server_public_key = s.recv(1024).decode()
+    # server_public_key = int.from_bytes(s.recv(1024), "big")
     print("Server public key = ", server_public_key)
 
     # sending client public key to server
     s.send(str(client_Public_Key).encode())
 
     # creating shared secret
-    s_Kp = (int(server_public_key[0]), int(server_public_key[1]))
+    print(type(server_public_key[0]))
+    s_Kp = tuple(int(k) for k in server_public_key[1:-1].split(", "))
+    print(s_Kp)
+    print(type(s_Kp[0]))
     server_shared_secret = scalar_mult(int(client_Secret_Key), s_Kp)
-    print("Server shared secret is = ", server_shared_secret)
+    print("### Server shared secret is = ", server_shared_secret)
 
 
     # print("Server says => ", s.recv(1024).decode())  # printing message received from server
