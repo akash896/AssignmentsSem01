@@ -6,22 +6,19 @@ EllipticCurve = collections.namedtuple('EllipticCurve', 'name p a b g n h')
 
 curve = EllipticCurve(
     'secp256k1',
-    # Field characteristic.
+    # the Field characteristics are .
     p=0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f,
-    # Curve coefficients.
+    # the Curve coefficients are.
     a=0,
     b=7,
-    # Base point.
+    # the Base point is.
     g=(0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798,
        0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8),
-    # Subgroup order.
+    # the Subgroup order is.
     n=0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141,
-    # Subgroup cofactor.
+    # the Subgroup cofactor is:
     h=1,
 )
-
-# Modular arithmetic ##########################################################
-
 
 def inverse_mod(k, p):
     """Returns the inverse of k modulo p.
@@ -41,10 +38,10 @@ def inverse_mod(k, p):
     r, old_r = p, k
 
     while r != 0:
-        quotient = old_r // r
-        old_r, r = r, old_r - quotient * r
-        old_s, s = s, old_s - quotient * s
-        old_t, t = t, old_t - quotient * t
+        quo = old_r // r
+        old_r, r = r, old_r - quo * r
+        old_s, s = s, old_s - quo * s
+        old_t, t = t, old_t - quo * t
 
     gcd, x, y = old_r, old_s, old_t
 
@@ -54,9 +51,7 @@ def inverse_mod(k, p):
     return x % p
 
 
-# Functions that work on curve points #########################################
-
-
+############### Functions that works on curve points ####################
 def is_on_curve(point):
     """Returns True if the given point lies on the elliptic curve."""
     if point is None:
@@ -104,7 +99,7 @@ def point_add(point1, point2):
 
 
 def scalar_mult(k, point):
-    """Returns k * point computed using the double and point_add algorithm."""
+    # Returns k * point computed using the double and point_add algorithm.
     assert is_on_curve(point)
 
     if k % curve.n == 0 or point is None:

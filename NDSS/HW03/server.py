@@ -1,5 +1,5 @@
 import hmac
-
+import timeit
 from secp256k1 import curve,scalar_mult
 import random
 import socket
@@ -60,6 +60,12 @@ def start_server():
    s.bind((host, port))        # Bind to the port number
    s.listen(5)                 # Now wait for client connection.
    c, addr = s.accept()  # Establish connection with client.
+
+   start = timeit.timeit()
+   generate_asymmetric_keys()
+   print("Server Public key = ", server_Public_Key)
+   print("Server secret key = ", server_Secret_Key)
+
    print('Got connection from client with address = ', addr)
 
    # sending server public key to client
@@ -71,6 +77,11 @@ def start_server():
     # creating the shared secret
    client_shared_secret = scalar_mult(server_Secret_Key, client_public_key)
    print("### Client shared secret = ", client_shared_secret)
+   end = timeit.timeit()
+   print("TIME taken to generate shared secret in server side = ",end - start)
+
+
+
 
    send_message_to_client(c, client_shared_secret)
    check_server_message(c, client_shared_secret)
@@ -91,7 +102,4 @@ def start_server():
 
 
 if __name__ == '__main__':
-   generate_asymmetric_keys()
-   print("Server Public key = ", server_Public_Key)
-   print("Server secret key = ", server_Secret_Key)
    start_server()

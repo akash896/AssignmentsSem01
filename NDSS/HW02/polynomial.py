@@ -41,18 +41,20 @@ def get_mod(FxGx, Mx):
 
 if __name__ == '__main__':
     in1 = str(input())  # input 1st polynomial
-    in2 = str(input())  # input second polynomial
+    in2 = str(input())  # input 2nd polynomial
     Fx, Gx = ([], [])
-    Mx = [128, 7, 2, 1, 0] # mod polynomial values
+    Mx = [128, 7, 2, 1, 0] # mod polynomial values given in question
     fx = in1.split(" ")
     gx = in2.split(" ")
     for i in fx:    # creating Fx with 1st input
         Fx.append(int(i))
     for j in gx:    # creating Gx with 2nd input
         Gx.append(int(j))
-
+    # doing product of ploynomial1 and polynomial2
     FxGx = get_product(Fx, Gx)
     FxGx.sort(reverse=True)
+
+    #doing poduct polynomial MOD given polynomial
     result = get_mod(FxGx, Mx)
     print(result)
 
